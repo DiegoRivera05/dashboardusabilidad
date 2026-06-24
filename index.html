@@ -1,1 +1,723 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Usabilidad de Aulas Virtuales</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg:#0f1117;--bg2:#1a1d27;--bg3:#22263a;--accent:#6c63ff;--accent2:#00d4aa;
+    --accent3:#ff6b6b;--accent4:#ffd93d;--text:#e8eaf6;--text2:#9aa0c0;
+    --border:#2e3350;--card:#1e2235;--hover:#252a40;
+    --green:#00d4aa;--red:#ff6b6b;--yellow:#ffd93d;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;}
 
+  .header{background:linear-gradient(135deg,#1a1d27,#12142a);border-bottom:1px solid var(--border);
+    padding:16px 28px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100;}
+  .header h1{font-size:18px;font-weight:700;}
+  .header p{font-size:11px;color:var(--text2);margin-top:2px;}
+  .header-badge{margin-left:auto;background:rgba(108,99,255,.15);border:1px solid var(--accent);
+    color:var(--accent);padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;}
+
+  .container{padding:20px 28px;max-width:1700px;margin:0 auto;}
+
+  .kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:20px;}
+  .kpi-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;
+    position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;}
+  .kpi-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3);}
+  .kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+  .kpi-card.purple::before{background:var(--accent);}
+  .kpi-card.green::before{background:var(--green);}
+  .kpi-card.red::before{background:var(--red);}
+  .kpi-card.yellow::before{background:var(--yellow);}
+  .kpi-card.teal::before{background:#38bdf8;}
+  .kpi-label{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;}
+  .kpi-value{font-size:26px;font-weight:800;}
+  .kpi-card.purple .kpi-value{color:var(--accent);}
+  .kpi-card.green .kpi-value{color:var(--green);}
+  .kpi-card.red .kpi-value{color:var(--red);}
+  .kpi-card.yellow .kpi-value{color:var(--yellow);}
+  .kpi-card.teal .kpi-value{color:#38bdf8;}
+  .kpi-sub{font-size:10px;color:var(--text2);margin-top:5px;}
+  .kpi-icon{position:absolute;right:14px;top:14px;font-size:26px;opacity:.12;}
+
+  .main-grid{display:grid;grid-template-columns:320px 1fr;gap:18px;}
+
+  .left-panel{background:var(--card);border:1px solid var(--border);border-radius:12px;
+    display:flex;flex-direction:column;height:calc(100vh - 210px);position:sticky;top:82px;}
+  .panel-header{padding:14px;border-bottom:1px solid var(--border);}
+  .panel-header h3{font-size:12px;font-weight:600;margin-bottom:8px;}
+  .search-box{position:relative;}
+  .search-box input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;
+    padding:7px 10px 7px 30px;color:var(--text);font-size:12px;outline:none;transition:border-color .2s;}
+  .search-box input:focus{border-color:var(--accent);}
+  .search-box::before{content:'🔍';position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:11px;pointer-events:none;}
+  .filter-row{display:flex;gap:6px;margin-top:7px;}
+  .filter-btn{flex:1;padding:4px 6px;background:var(--bg3);border:1px solid var(--border);
+    border-radius:6px;color:var(--text2);font-size:10px;cursor:pointer;transition:all .2s;text-align:center;}
+  .filter-btn:hover,.filter-btn.active{background:var(--accent);border-color:var(--accent);color:white;}
+  .cat-select-wrap{margin-top:6px;}
+  select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;
+    padding:6px 8px;color:var(--text);font-size:11px;outline:none;}
+  select:focus{border-color:var(--accent);}
+  .prof-count{font-size:10px;color:var(--text2);padding:5px 14px;}
+  .prof-list{overflow-y:auto;flex:1;padding:6px;}
+  .prof-item{padding:9px 10px;border-radius:8px;cursor:pointer;transition:background .15s;
+    border:1px solid transparent;margin-bottom:2px;}
+  .prof-item:hover{background:var(--hover);}
+  .prof-item.selected{background:rgba(108,99,255,.15);border-color:var(--accent);}
+  .prof-name{font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .prof-meta{display:flex;gap:5px;margin-top:3px;align-items:center;}
+  .prof-pct{font-size:10px;font-weight:700;}
+  .pct-high{color:var(--green);}
+  .pct-mid{color:var(--yellow);}
+  .pct-low{color:var(--red);}
+  .prof-courses{font-size:10px;color:var(--text2);}
+  .mini-bar-wrap{flex:1;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;}
+  .mini-bar{height:100%;border-radius:2px;}
+  .bar-high{background:var(--green);}
+  .bar-mid{background:var(--yellow);}
+  .bar-low{background:var(--red);}
+
+  .right-panel{display:flex;flex-direction:column;gap:14px;}
+
+  /* TABS */
+  .tabs{display:flex;gap:4px;margin-bottom:10px;}
+  .tab{padding:5px 12px;border-radius:6px;background:var(--bg3);border:1px solid var(--border);
+    color:var(--text2);font-size:11px;cursor:pointer;transition:all .2s;}
+  .tab.active{background:var(--accent);border-color:var(--accent);color:white;}
+
+  .global-view{display:none;}
+  .global-view.active{display:block;}
+  .detail-view{display:none;}
+  .detail-view.active{display:block;}
+
+  .detail-header{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 22px;}
+  .detail-name{font-size:18px;font-weight:700;}
+  .detail-email{font-size:11px;color:var(--text2);margin-top:2px;}
+  .detail-kpis{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap;}
+  .detail-kpi .val{font-size:20px;font-weight:800;}
+  .detail-kpi .lbl{font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;}
+
+  /* INFO BOX */
+  .info-box{background:rgba(108,99,255,.08);border:1px solid rgba(108,99,255,.3);border-radius:8px;
+    padding:10px 14px;font-size:11px;color:var(--text2);margin-bottom:10px;display:flex;gap:8px;align-items:flex-start;}
+  .info-box .icon{font-size:16px;flex-shrink:0;}
+
+  .charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .chart-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;}
+  .chart-card h4{font-size:12px;font-weight:600;margin-bottom:10px;}
+  .chart-wrap{position:relative;}
+
+  .table-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;overflow-x:auto;}
+  .table-card h4{font-size:12px;font-weight:600;margin-bottom:10px;}
+  table{width:100%;border-collapse:collapse;font-size:11px;}
+  th{background:var(--bg3);color:var(--text2);padding:7px 10px;text-align:left;font-weight:600;
+    font-size:10px;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;user-select:none;}
+  th:hover{color:var(--text);}
+  td{padding:7px 10px;border-top:1px solid var(--border);color:var(--text);}
+  tr:hover td{background:var(--hover);}
+  .badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;}
+  .badge-green{background:rgba(0,212,170,.15);color:var(--green);}
+  .badge-yellow{background:rgba(255,217,61,.15);color:var(--yellow);}
+  .badge-red{background:rgba(255,107,107,.15);color:var(--red);}
+  .badge-blue{background:rgba(108,99,255,.15);color:#a5b4fc;}
+  .badge-gray{background:rgba(158,168,192,.1);color:var(--text2);}
+  .progress-cell{display:flex;align-items:center;gap:6px;}
+  .prog-bar-wrap{width:60px;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;flex-shrink:0;}
+  .prog-bar{height:100%;border-radius:3px;}
+
+  .back-btn{display:inline-flex;align-items:center;gap:6px;background:var(--bg3);
+    border:1px solid var(--border);color:var(--text2);padding:5px 10px;border-radius:6px;
+    font-size:11px;cursor:pointer;margin-bottom:10px;transition:all .2s;}
+  .back-btn:hover{color:var(--text);border-color:var(--accent);}
+
+  /* Filtros tabla cursos */
+  .cursos-filters{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+  .cursos-filters input,.cursos-filters select{
+    background:var(--bg3);border:1px solid var(--border);border-radius:6px;
+    padding:5px 8px;color:var(--text);font-size:11px;outline:none;width:auto;}
+  .cursos-filters input{width:180px;}
+  .cursos-filters select:focus,.cursos-filters input:focus{border-color:var(--accent);}
+
+  /* Período badge colors */
+  .p2023{background:rgba(148,163,184,.1);color:#94a3b8;}
+  .p2024{background:rgba(56,189,248,.1);color:#38bdf8;}
+  .p2025{background:rgba(108,99,255,.15);color:#a5b4fc;}
+  .p2026{background:rgba(0,212,170,.1);color:#00d4aa;}
+
+  ::-webkit-scrollbar{width:4px;height:4px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+  ::-webkit-scrollbar-thumb:hover{background:var(--accent);}
+  .empty-state{text-align:center;padding:32px;color:var(--text2);font-size:13px;}
+  .empty-state .emoji{font-size:36px;margin-bottom:10px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span style="font-size:26px">🖥️</span>
+  <div>
+    <h1>Dashboard de Usabilidad de Aulas Virtuales</h1>
+    <p>Análisis de acceso y actividad por profesor y programa académico · ECCI 2023–2026</p>
+  </div>
+  <div class="header-badge">ECCI · Períodos 2023-1 a 2026-1</div>
+</div>
+
+<div class="container">
+  <div class="kpi-row">
+    <div class="kpi-card purple"><span class="kpi-icon">👥</span>
+      <div class="kpi-label">Total Profesores</div>
+      <div class="kpi-value" id="kpi-profs">–</div>
+      <div class="kpi-sub">activos en el sistema</div></div>
+    <div class="kpi-card teal"><span class="kpi-icon">📚</span>
+      <div class="kpi-label">Total Cursos</div>
+      <div class="kpi-value" id="kpi-cursos">–</div>
+      <div class="kpi-sub">asignaciones registradas</div></div>
+    <div class="kpi-card green"><span class="kpi-icon">✅</span>
+      <div class="kpi-label">Cursos con Uso</div>
+      <div class="kpi-value" id="kpi-uso">–</div>
+      <div class="kpi-sub" id="kpi-uso-sub">–</div></div>
+    <div class="kpi-card red"><span class="kpi-icon">❌</span>
+      <div class="kpi-label">Cursos sin Uso</div>
+      <div class="kpi-value" id="kpi-nouso">–</div>
+      <div class="kpi-sub">sin ningún ingreso registrado</div></div>
+    <div class="kpi-card yellow"><span class="kpi-icon">🖱️</span>
+      <div class="kpi-label">Total Clics</div>
+      <div class="kpi-value" id="kpi-clicks">–</div>
+      <div class="kpi-sub">interacciones totales</div></div>
+  </div>
+
+  <div class="main-grid">
+    <!-- PANEL IZQUIERDO -->
+    <div class="left-panel">
+      <div class="panel-header">
+        <h3>👨‍🏫 Profesores</h3>
+        <div class="search-box">
+          <input type="text" id="search-input" placeholder="Buscar profesor...">
+        </div>
+        <div class="filter-row">
+          <div class="filter-btn active" onclick="setFilter('all',this)">Todos</div>
+          <div class="filter-btn" onclick="setFilter('high',this)">≥70%</div>
+          <div class="filter-btn" onclick="setFilter('mid',this)">30–69%</div>
+          <div class="filter-btn" onclick="setFilter('low',this)">&lt;30%</div>
+        </div>
+        <div class="cat-select-wrap">
+          <select id="cat-filter" onchange="renderList()"><option value="">Todos los programas</option></select>
+        </div>
+      </div>
+      <div class="prof-count" id="prof-count"></div>
+      <div class="prof-list" id="prof-list"></div>
+    </div>
+
+    <!-- PANEL DERECHO -->
+    <div class="right-panel" id="right-panel">
+
+      <!-- VISTA GLOBAL -->
+      <div class="global-view active" id="global-view">
+        <div class="tabs">
+          <div class="tab active" onclick="showGlobalTab('resumen',this)">📊 Resumen por Programa</div>
+          <div class="tab" onclick="showGlobalTab('ranking',this)">🏆 Ranking Profesores</div>
+        </div>
+
+        <div id="tab-resumen">
+          <div class="charts-grid">
+            <div class="chart-card" style="grid-column:1/-1;">
+              <h4>📈 % de Uso por Programa <span style="font-size:10px;color:var(--text2);font-weight:400">— Cursos con al menos un ingreso sobre el total asignado</span></h4>
+              <div class="chart-wrap" style="height:310px;"><canvas id="chart-global-uso"></canvas></div>
+            </div>
+            <div class="chart-card">
+              <h4>📦 Distribución de Cursos por Programa (Top 10)</h4>
+              <div class="chart-wrap" style="height:230px;"><canvas id="chart-dist"></canvas></div>
+            </div>
+            <div class="chart-card">
+              <h4>🖱️ Top 10 Programas por Clics</h4>
+              <div class="chart-wrap" style="height:230px;"><canvas id="chart-clicks"></canvas></div>
+            </div>
+          </div>
+          <div class="table-card" style="margin-top:0;">
+            <h4>📋 Tabla Global por Programa</h4>
+            <table>
+              <thead><tr>
+                <th onclick="sortGT('nombre')">Programa ↕</th>
+                <th onclick="sortGT('total')">Total ↕</th>
+                <th onclick="sortGT('uso')">Con Uso ↕</th>
+                <th onclick="sortGT('no_uso')">Sin Uso ↕</th>
+                <th onclick="sortGT('pct_uso')">% Uso ↕</th>
+                <th onclick="sortGT('clicks')">Clics ↕</th>
+              </tr></thead>
+              <tbody id="global-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="tab-ranking" style="display:none;">
+          <div class="table-card">
+            <h4>🏆 Ranking de Profesores por % de Uso</h4>
+            <div class="cursos-filters">
+              <input type="text" id="rank-search" placeholder="Buscar profesor..." oninput="renderRanking()">
+              <select id="rank-cat" onchange="renderRanking()"><option value="">Todos los programas</option></select>
+              <select id="rank-periodo" onchange="renderRanking()"><option value="">Todos los períodos</option></select>
+              <select id="rank-sort" onchange="renderRanking()">
+                <option value="pct_desc">Mayor % primero</option>
+                <option value="pct_asc">Menor % primero</option>
+                <option value="clicks_desc">Mayor clics</option>
+                <option value="cursos_desc">Más cursos</option>
+              </select>
+            </div>
+            <div style="max-height:520px;overflow-y:auto;">
+              <table>
+                <thead><tr>
+                  <th>#</th><th>Profesor</th><th>Programa(s)</th>
+                  <th>Cursos</th><th>Con Uso</th><th>% Uso</th><th>Clics</th>
+                </tr></thead>
+                <tbody id="rank-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VISTA DETALLE PROFESOR -->
+      <div class="detail-view" id="detail-view">
+        <div class="back-btn" onclick="showGlobal()">← Volver al resumen global</div>
+
+        <div class="info-box">
+          <span class="icon">ℹ️</span>
+          <span><strong>¿Cómo se calcula el % de uso?</strong> Es la proporción de cursos donde el profesor registró <em>al menos un ingreso</em> al aula virtual sobre el total de cursos asignados en el período. Un curso cuenta como "usado" si tiene fecha de primer ingreso registrada.</span>
+        </div>
+
+        <div class="detail-header">
+          <div style="display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap;">
+            <div style="flex:1;">
+              <div class="detail-name" id="detail-name"></div>
+              <div class="detail-email" id="detail-email"></div>
+              <div class="detail-kpis" id="detail-kpis"></div>
+            </div>
+            <div style="text-align:center;min-width:100px;">
+              <div style="font-size:9px;color:var(--text2);text-transform:uppercase;margin-bottom:4px;letter-spacing:.5px;">Uso Global</div>
+              <canvas id="ring-chart" width="90" height="90"></canvas>
+              <div style="font-size:16px;font-weight:800;margin-top:-52px;position:relative;z-index:1;pointer-events:none;" id="ring-val"></div>
+              <div style="margin-top:38px;font-size:9px;color:var(--text2);">de cursos activos</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CHARTS DETALLE -->
+        <div class="charts-grid">
+          <div class="chart-card">
+            <h4>📊 % Uso por Programa</h4>
+            <div class="chart-wrap" style="height:200px;"><canvas id="detail-chart-pct"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h4>🖱️ Clics por Programa</h4>
+            <div class="chart-wrap" style="height:200px;"><canvas id="detail-chart-clicks"></canvas></div>
+          </div>
+        </div>
+
+        <!-- TABLA RESUMEN PROGRAMA -->
+        <div class="table-card">
+          <h4>📋 Resumen por Programa</h4>
+          <table>
+            <thead><tr>
+              <th>Programa</th><th>Cursos</th><th>Con Uso</th><th>Sin Uso</th><th>% Uso</th><th>Clics</th>
+            </tr></thead>
+            <tbody id="detail-table"></tbody>
+          </table>
+        </div>
+
+        <!-- TABLA CURSOS INDIVIDUALES -->
+        <div class="table-card">
+          <h4>📖 Detalle de Cursos del Profesor</h4>
+          <div class="cursos-filters">
+            <input type="text" id="curso-search" placeholder="Buscar curso..." oninput="renderCursosTable()">
+            <select id="curso-periodo" onchange="renderCursosTable()">
+              <option value="">Todos los períodos</option>
+            </select>
+            <select id="curso-cat" onchange="renderCursosTable()">
+              <option value="">Todos los programas</option>
+            </select>
+            <select id="curso-uso" onchange="renderCursosTable()">
+              <option value="">Todos</option>
+              <option value="si">Con ingreso</option>
+              <option value="no">Sin ingreso</option>
+            </select>
+          </div>
+          <div id="cursos-count" style="font-size:10px;color:var(--text2);margin-bottom:6px;"></div>
+          <div style="max-height:400px;overflow-y:auto;">
+            <table>
+              <thead><tr>
+                <th>Período</th><th>Nombre del Curso</th><th>Programa</th>
+                <th>Uso</th><th>Primer Ingreso</th><th>Último Ingreso</th><th>Clics</th>
+              </tr></thead>
+              <tbody id="cursos-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Cargando datos desde archivo externo...
+let RAW = null;
+
+async function loadData() {
+  const res = await fetch('dashboard_data2.json');
+  RAW = await res.json();
+  initApp();
+}
+
+
+function initApp() {
+const DATA = RAW.profesores;
+const CAT_NAMES = RAW.cat_names;
+const CAT_GLOBAL = RAW.cat_global;
+const STATS = RAW.stats;
+const PERIODOS = RAW.periodos;
+
+let currentFilter = 'all';
+let currentCat = '';
+let selectedProf = null;
+let gtSortCol = 'total', gtSortDir = -1;
+let chartGU, chartDist, chartClicks, detChartPct, detChartClicks, ringChart;
+
+const fmt = n => (n||0).toLocaleString('es-CO');
+const pctClass = p => p >= 70 ? 'pct-high' : p >= 30 ? 'pct-mid' : 'pct-low';
+const barClass = p => p >= 70 ? 'bar-high' : p >= 30 ? 'bar-mid' : 'bar-low';
+const badgeClass = p => p >= 70 ? 'badge-green' : p >= 30 ? 'badge-yellow' : 'badge-red';
+const catName = c => CAT_NAMES[c] || c;
+
+const periodoClass = p => {
+  if (!p || p === 'Sin asignación') return 'badge-gray';
+  if (p.startsWith('2023')) return 'p2023';
+  if (p.startsWith('2024')) return 'p2024';
+  if (p.startsWith('2025')) return 'p2025';
+  if (p.startsWith('2026')) return 'p2026';
+  return 'badge-gray';
+};
+
+function getPct(prof, cat) {
+  if (!cat) return prof.pct_uso_global;
+  const c = prof.categorias.find(x => x.categoria === cat);
+  return c ? c.pct_uso : null;
+}
+
+function init() {
+  document.getElementById('kpi-profs').textContent = fmt(STATS.total_profesores);
+  document.getElementById('kpi-cursos').textContent = fmt(STATS.total_cursos);
+  document.getElementById('kpi-uso').textContent = fmt(STATS.total_uso);
+  document.getElementById('kpi-uso-sub').textContent = STATS.pct_uso_global + '% del total';
+  document.getElementById('kpi-nouso').textContent = fmt(STATS.total_cursos - STATS.total_uso);
+  document.getElementById('kpi-clicks').textContent = fmt(STATS.total_clicks);
+
+  const allCats = [...new Set(CAT_GLOBAL.map(c => c.codigo))].sort();
+  ['cat-filter','rank-cat'].forEach(id => {
+    const sel = document.getElementById(id);
+    allCats.forEach(c => {
+      const o = document.createElement('option');
+      o.value = c; o.textContent = catName(c);
+      sel.appendChild(o);
+    });
+  });
+
+  PERIODOS.forEach(p => {
+    ['rank-periodo'].forEach(id => {
+      const sel = document.getElementById(id);
+      const o = document.createElement('option');
+      o.value = p; o.textContent = p;
+      sel.appendChild(o);
+    });
+  });
+
+  renderList();
+  renderGlobalCharts();
+  renderGlobalTable();
+  renderRanking();
+
+  document.getElementById('search-input').addEventListener('input', renderList);
+}
+
+function setFilter(f, el) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderList();
+}
+
+function getFilteredList() {
+  const q = (document.getElementById('search-input').value || '').toLowerCase();
+  const cat = document.getElementById('cat-filter').value;
+  return DATA.filter(p => {
+    if (q && !p.nombre.toLowerCase().includes(q)) return false;
+    if (cat && !p.categorias.some(c => c.categoria === cat)) return false;
+    const pct = getPct(p, cat);
+    if (pct === null) return false;
+    if (currentFilter === 'high' && pct < 70) return false;
+    if (currentFilter === 'mid' && (pct < 30 || pct >= 70)) return false;
+    if (currentFilter === 'low' && pct >= 30) return false;
+    return true;
+  });
+}
+
+function renderList() {
+  currentCat = document.getElementById('cat-filter').value;
+  const list = getFilteredList();
+  const container = document.getElementById('prof-list');
+  document.getElementById('prof-count').textContent = `${list.length} profesores encontrados`;
+  if (!list.length) {
+    container.innerHTML = '<div class="empty-state"><div class="emoji">🔍</div>Sin resultados</div>';
+    return;
+  }
+  container.innerHTML = list.map(p => {
+    const pct = getPct(p, currentCat) ?? p.pct_uso_global;
+    const nc = p.total_cursos;
+    const sel = selectedProf && selectedProf.nombre === p.nombre;
+    return `<div class="prof-item${sel?' selected':''}" onclick="selectProf('${p.nombre.replace(/'/g,"\'")}')">
+      <div class="prof-name">${p.nombre}</div>
+      <div class="prof-meta">
+        <span class="prof-pct ${pctClass(pct)}">${pct}%</span>
+        <div class="mini-bar-wrap"><div class="mini-bar ${barClass(pct)}" style="width:${pct}%"></div></div>
+        <span class="prof-courses">${nc} cursos</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function selectProf(nombre) {
+  selectedProf = DATA.find(p => p.nombre === nombre);
+  if (!selectedProf) return;
+  renderList();
+  showDetail(selectedProf);
+}
+
+function showGlobal() {
+  selectedProf = null;
+  document.getElementById('global-view').classList.add('active');
+  document.getElementById('detail-view').classList.remove('active');
+  renderList();
+}
+
+function darkScale() {
+  return { grid:{ color:'#2e3350' }, ticks:{ color:'#9aa0c0', font:{ size:10 } } };
+}
+function tooltipStyle() {
+  return { backgroundColor:'#1e2235', borderColor:'#2e3350', borderWidth:1, titleColor:'#e8eaf6', bodyColor:'#9aa0c0' };
+}
+
+function showDetail(prof) {
+  document.getElementById('global-view').classList.remove('active');
+  document.getElementById('detail-view').classList.add('active');
+
+  document.getElementById('detail-name').textContent = prof.nombre;
+  document.getElementById('detail-email').textContent = prof.correo || '';
+
+  const pct = prof.pct_uso_global;
+  document.getElementById('detail-kpis').innerHTML = `
+    <div class="detail-kpi"><div class="val" style="color:var(--accent)">${prof.total_cursos}</div><div class="lbl">Total Cursos</div></div>
+    <div class="detail-kpi"><div class="val" style="color:var(--green)">${prof.total_uso}</div><div class="lbl">Con Ingreso</div></div>
+    <div class="detail-kpi"><div class="val" style="color:var(--red)">${prof.total_cursos - prof.total_uso}</div><div class="lbl">Sin Ingreso</div></div>
+    <div class="detail-kpi"><div class="val" style="color:var(--yellow)">${fmt(prof.total_clicks)}</div><div class="lbl">Total Clics</div></div>
+    <div class="detail-kpi"><div class="val" style="color:var(--accent2)">${prof.categorias.length}</div><div class="lbl">Programas</div></div>
+    <div class="detail-kpi"><div class="val" style="color:#38bdf8">${[...new Set(prof.cursos.map(c=>c.periodo))].filter(p=>p!=='Sin asignación').length}</div><div class="lbl">Períodos</div></div>
+  `;
+
+  document.getElementById('ring-val').textContent = pct + '%';
+  if (ringChart) ringChart.destroy();
+  const rc = document.getElementById('ring-chart').getContext('2d');
+  const ringColor = pct >= 70 ? '#00d4aa' : pct >= 30 ? '#ffd93d' : '#ff6b6b';
+  ringChart = new Chart(rc, {
+    type:'doughnut',
+    data:{ datasets:[{ data:[pct,100-pct], backgroundColor:[ringColor,'#22263a'], borderWidth:0 }] },
+    options:{ cutout:'75%', plugins:{ legend:{display:false}, tooltip:{enabled:false} }, animation:{duration:500} }
+  });
+
+  const cats = prof.categorias.filter(c => c.categoria !== '#N/A');
+  const labels = cats.map(c => c.cat_nombre || catName(c.categoria));
+  const pcts = cats.map(c => c.pct_uso);
+  const clks = cats.map(c => c.clicks);
+  const colors = pcts.map(p => p >= 70 ? '#00d4aa' : p >= 30 ? '#ffd93d' : '#ff6b6b');
+  const baseOpts = { responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false}, tooltip:{ ...tooltipStyle() } } };
+
+  if (detChartPct) detChartPct.destroy();
+  detChartPct = new Chart(document.getElementById('detail-chart-pct').getContext('2d'), {
+    type:'bar', data:{ labels, datasets:[{ data:pcts, backgroundColor:colors, borderRadius:4 }] },
+    options:{ ...baseOpts, scales:{ y:{ ...darkScale(), max:100 }, x:{ ...darkScale() } } }
+  });
+
+  if (detChartClicks) detChartClicks.destroy();
+  detChartClicks = new Chart(document.getElementById('detail-chart-clicks').getContext('2d'), {
+    type:'bar', data:{ labels, datasets:[{ data:clks, backgroundColor:'#6c63ff', borderRadius:4 }] },
+    options:{ ...baseOpts, scales:{ y:{ ...darkScale() }, x:{ ...darkScale() } } }
+  });
+
+  // Tabla resumen programa
+  document.getElementById('detail-table').innerHTML = cats.map(c => `
+    <tr><td><strong>${c.cat_nombre||catName(c.categoria)}</strong><br><span style="font-size:9px;color:var(--text2)">${c.categoria}</span></td>
+    <td>${c.num_cursos}</td>
+    <td style="color:var(--green)">${c.uso}</td>
+    <td style="color:var(--red)">${c.no_uso}</td>
+    <td><div class="progress-cell"><span class="badge ${badgeClass(c.pct_uso)}">${c.pct_uso}%</span>
+      <div class="prog-bar-wrap"><div class="prog-bar ${barClass(c.pct_uso)}" style="width:${c.pct_uso}%"></div></div></div></td>
+    <td>${fmt(c.clicks)}</td></tr>`).join('');
+
+  // Inicializar filtros de cursos
+  const periodos = [...new Set(prof.cursos.map(c => c.periodo))].sort();
+  const profCats = [...new Set(prof.cursos.map(c => c.categoria).filter(c => c !== '#N/A'))].sort();
+  const cpSel = document.getElementById('curso-periodo');
+  const ccSel = document.getElementById('curso-cat');
+  cpSel.innerHTML = '<option value="">Todos los períodos</option>' + periodos.map(p => `<option value="${p}">${p}</option>`).join('');
+  ccSel.innerHTML = '<option value="">Todos los programas</option>' + profCats.map(c => `<option value="${c}">${catName(c)}</option>`).join('');
+
+  renderCursosTable();
+}
+
+function renderCursosTable() {
+  if (!selectedProf) return;
+  const q = (document.getElementById('curso-search').value || '').toLowerCase();
+  const periodo = document.getElementById('curso-periodo').value;
+  const cat = document.getElementById('curso-cat').value;
+  const uso = document.getElementById('curso-uso').value;
+
+  let cursos = selectedProf.cursos.filter(c => {
+    if (q && !c.nombre.toLowerCase().includes(q)) return false;
+    if (periodo && c.periodo !== periodo) return false;
+    if (cat && c.categoria !== cat) return false;
+    if (uso === 'si' && !c.uso) return false;
+    if (uso === 'no' && c.uso) return false;
+    return true;
+  });
+
+  document.getElementById('cursos-count').textContent = `${cursos.length} cursos`;
+
+  if (!cursos.length) {
+    document.getElementById('cursos-table-body').innerHTML =
+      '<tr><td colspan="7" style="text-align:center;color:var(--text2);padding:20px">Sin resultados</td></tr>';
+    return;
+  }
+
+  document.getElementById('cursos-table-body').innerHTML = cursos.map(c => `
+    <tr>
+      <td><span class="badge ${periodoClass(c.periodo)}">${c.periodo}</span></td>
+      <td style="max-width:260px;font-weight:500">${c.nombre}</td>
+      <td style="font-size:10px;color:var(--text2)">${c.cat_nombre||catName(c.categoria)}</td>
+      <td>${c.uso
+        ? '<span class="badge badge-green">✓ Ingresó</span>'
+        : '<span class="badge badge-red">✗ No ingresó</span>'}</td>
+      <td style="font-size:10px">${c.primer_ingreso ? c.primer_ingreso.substring(0,10) : '–'}</td>
+      <td style="font-size:10px">${c.ultimo_ingreso ? c.ultimo_ingreso.substring(0,10) : '–'}</td>
+      <td>${c.clicks > 0 ? fmt(c.clicks) : '<span style="color:var(--text2)">0</span>'}</td>
+    </tr>`).join('');
+}
+
+function renderGlobalCharts() {
+  const cats = CAT_GLOBAL.filter(c => c.codigo !== '#N/A');
+  const sorted = [...cats].sort((a,b) => b.pct_uso - a.pct_uso);
+  const labels = sorted.map(c => c.nombre);
+  const pcts = sorted.map(c => c.pct_uso);
+  const colors = pcts.map(p => p >= 70 ? '#00d4aa' : p >= 30 ? '#ffd93d' : '#ff6b6b');
+  const baseOpts = { responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false}, tooltip:{ ...tooltipStyle() } } };
+
+  if (chartGU) chartGU.destroy();
+  chartGU = new Chart(document.getElementById('chart-global-uso').getContext('2d'), {
+    type:'bar', data:{ labels, datasets:[{ data:pcts, backgroundColor:colors, borderRadius:4 }] },
+    options:{ ...baseOpts, indexAxis:'y', scales:{ x:{ ...darkScale(), max:100 }, y:{ ...darkScale() } } }
+  });
+
+  const top10 = [...cats].sort((a,b) => b.total - a.total).slice(0,10);
+  if (chartDist) chartDist.destroy();
+  chartDist = new Chart(document.getElementById('chart-dist').getContext('2d'), {
+    type:'doughnut',
+    data:{ labels:top10.map(c=>c.nombre),
+      datasets:[{ data:top10.map(c=>c.total), borderWidth:0,
+        backgroundColor:['#6c63ff','#00d4aa','#ff6b6b','#ffd93d','#38bdf8','#f472b6','#a78bfa','#34d399','#fb923c','#818cf8'] }] },
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ position:'right', labels:{ color:'#9aa0c0', font:{size:10}, boxWidth:10 } },
+        tooltip:{ ...tooltipStyle() } } }
+  });
+
+  const topC = [...cats].sort((a,b) => b.clicks - a.clicks).slice(0,10);
+  if (chartClicks) chartClicks.destroy();
+  chartClicks = new Chart(document.getElementById('chart-clicks').getContext('2d'), {
+    type:'bar', data:{ labels:topC.map(c=>c.nombre), datasets:[{ data:topC.map(c=>c.clicks), backgroundColor:'#6c63ff', borderRadius:4 }] },
+    options:{ ...baseOpts, indexAxis:'y', scales:{ x:{ ...darkScale() }, y:{ ...darkScale() } } }
+  });
+}
+
+function renderGlobalTable() {
+  const cats = CAT_GLOBAL.filter(c => c.codigo !== '#N/A');
+  const sorted = [...cats].sort((a,b) => {
+    const va = a[gtSortCol] ?? 0, vb = b[gtSortCol] ?? 0;
+    return gtSortDir * (typeof va === 'string' ? va.localeCompare(vb) : vb - va);
+  });
+  document.getElementById('global-table-body').innerHTML = sorted.map(c => `
+    <tr><td><strong>${c.nombre}</strong><br><span style="font-size:9px;color:var(--text2)">${c.codigo}</span></td>
+    <td>${fmt(c.total)}</td>
+    <td style="color:var(--green)">${fmt(c.uso)}</td>
+    <td style="color:var(--red)">${fmt(c.no_uso)}</td>
+    <td><div class="progress-cell"><span class="badge ${badgeClass(c.pct_uso)}">${c.pct_uso}%</span>
+      <div class="prog-bar-wrap"><div class="prog-bar ${barClass(c.pct_uso)}" style="width:${c.pct_uso}%"></div></div></div></td>
+    <td>${fmt(c.clicks)}</td></tr>`).join('');
+}
+
+function sortGT(col) {
+  if (gtSortCol === col) gtSortDir *= -1;
+  else { gtSortCol = col; gtSortDir = -1; }
+  renderGlobalTable();
+}
+
+function showGlobalTab(tab, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-resumen').style.display = tab === 'resumen' ? 'block' : 'none';
+  document.getElementById('tab-ranking').style.display = tab === 'ranking' ? 'block' : 'none';
+}
+
+function renderRanking() {
+  const q = (document.getElementById('rank-search')?.value || '').toLowerCase();
+  const cat = document.getElementById('rank-cat')?.value || '';
+  const periodo = document.getElementById('rank-periodo')?.value || '';
+  const sort = document.getElementById('rank-sort')?.value || 'pct_desc';
+
+  let list = DATA.filter(p => {
+    if (q && !p.nombre.toLowerCase().includes(q)) return false;
+    if (cat && !p.categorias.some(c => c.categoria === cat)) return false;
+    if (periodo && !p.cursos.some(c => c.periodo === periodo)) return false;
+    return true;
+  });
+
+  list = [...list].sort((a,b) => {
+    if (sort === 'pct_desc') return b.pct_uso_global - a.pct_uso_global;
+    if (sort === 'pct_asc') return a.pct_uso_global - b.pct_uso_global;
+    if (sort === 'clicks_desc') return b.total_clicks - a.total_clicks;
+    if (sort === 'cursos_desc') return b.total_cursos - a.total_cursos;
+    return 0;
+  }).slice(0, 300);
+
+  document.getElementById('rank-table-body').innerHTML = list.map((p, i) => {
+    const progs = [...new Set(p.categorias.filter(c=>c.categoria!=='#N/A').map(c=>c.cat_nombre||catName(c.categoria)))].join(', ');
+    return `<tr style="cursor:pointer" onclick="selectProf('${p.nombre.replace(/'/g,"\'")}')">
+      <td style="color:var(--text2);font-weight:600">${i+1}</td>
+      <td style="font-weight:600">${p.nombre}</td>
+      <td style="font-size:10px;color:var(--text2);max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${progs}</td>
+      <td>${p.total_cursos}</td>
+      <td style="color:var(--green)">${p.total_uso}</td>
+      <td><div class="progress-cell"><span class="badge ${badgeClass(p.pct_uso_global)}">${p.pct_uso_global}%</span>
+        <div class="prog-bar-wrap"><div class="prog-bar ${barClass(p.pct_uso_global)}" style="width:${p.pct_uso_global}%"></div></div></div></td>
+      <td>${fmt(p.total_clicks)}</td></tr>`;
+  }).join('');
+}
+
+}
+
+loadData();
+</script>
+</body>
+</html>
