@@ -14,11 +14,15 @@
 
   .header{background:linear-gradient(135deg,#1a1d27,#12142a);border-bottom:1px solid var(--border);
     padding:14px 28px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100;}
+  .header-left{display:flex;align-items:center;gap:14px;flex:1;}
   .header h1{font-size:17px;font-weight:700;}
   .header p{font-size:11px;color:var(--text2);margin-top:2px;}
-  .header-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+  .header-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
   .header-badge{background:rgba(108,99,255,.15);border:1px solid var(--accent);
     color:var(--accent);padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;}
+  .update-badge{background:rgba(0,212,170,.08);border:1px solid rgba(0,212,170,.3);
+    color:var(--green);padding:4px 12px;border-radius:20px;font-size:11px;
+    display:flex;align-items:center;gap:5px;}
   .periodo-sel{display:flex;align-items:center;gap:8px;background:var(--bg3);
     border:1px solid var(--border);border-radius:8px;padding:4px 10px;}
   .periodo-sel label{font-size:11px;color:var(--text2);}
@@ -27,15 +31,6 @@
   .periodo-sel select option{background:var(--bg2);}
 
   .container{padding:18px 28px;max-width:1700px;margin:0 auto;}
-
-  /* PROMEDIO BOX */
-  .ref-box{background:rgba(255,217,61,.06);border:1px solid rgba(255,217,61,.25);
-    border-radius:10px;padding:10px 18px;margin-bottom:14px;
-    display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
-  .ref-box .rv{font-size:22px;font-weight:800;color:var(--yellow);}
-  .ref-box .rl{font-size:11px;color:var(--text2);}
-  .ref-box .rl strong{color:var(--text);}
-  .ref-divider{width:1px;height:36px;background:var(--border);}
 
   .kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px;}
   .kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;
@@ -59,9 +54,8 @@
 
   .main-grid{display:grid;grid-template-columns:300px 1fr;gap:16px;}
 
-  /* PANEL IZQUIERDO */
   .left-panel{background:var(--card);border:1px solid var(--border);border-radius:12px;
-    display:flex;flex-direction:column;height:calc(100vh - 216px);position:sticky;top:74px;}
+    display:flex;flex-direction:column;height:calc(100vh - 196px);position:sticky;top:74px;}
   .panel-hdr{padding:12px;border-bottom:1px solid var(--border);}
   .panel-hdr h3{font-size:12px;font-weight:600;margin-bottom:8px;}
   .search-box{position:relative;}
@@ -97,7 +91,6 @@
   .bar-low{background:var(--red);}
   .bar-over{background:var(--purple);}
 
-  /* PANEL DERECHO */
   .right-panel{display:flex;flex-direction:column;gap:14px;}
   .tabs{display:flex;gap:4px;margin-bottom:8px;}
   .tab{padding:5px 12px;border-radius:6px;background:var(--bg3);border:1px solid var(--border);
@@ -106,7 +99,6 @@
   .view{display:none;}
   .view.active{display:block;}
 
-  /* DETALLE */
   .det-header{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 20px;}
   .det-name{font-size:17px;font-weight:700;}
   .det-email{font-size:11px;color:var(--text2);margin-top:1px;}
@@ -138,7 +130,7 @@
   .bp{background:rgba(167,139,250,.2);color:var(--purple);}
   .bgr{background:rgba(158,168,192,.1);color:var(--text2);}
   .pbar-cell{display:flex;align-items:center;gap:5px;}
-  .pbar-w{width:55px;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;flex-shrink:0;}
+  .pbar-w{width:60px;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;flex-shrink:0;}
   .pbar{height:100%;border-radius:3px;}
 
   .back-btn{display:inline-flex;align-items:center;gap:5px;background:var(--bg3);
@@ -156,29 +148,28 @@
   .p2024{background:rgba(56,189,248,.1);color:#38bdf8;}
   .p2025{background:rgba(108,99,255,.15);color:#a5b4fc;}
   .p2026{background:rgba(0,212,170,.1);color:#00d4aa;}
-  .excl-tag{font-size:9px;color:var(--red);font-style:italic;}
 
   ::-webkit-scrollbar{width:4px;height:4px;}
   ::-webkit-scrollbar-track{background:transparent;}
   ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
   ::-webkit-scrollbar-thumb:hover{background:var(--accent);}
-
-  /* RING */
-  .ring-wrap{position:relative;width:80px;height:80px;flex-shrink:0;}
-  .ring-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-    font-size:13px;font-weight:800;text-align:center;line-height:1.1;}
-  .ring-sub{font-size:9px;color:var(--text2);margin-top:4px;text-align:center;}
 </style>
 </head>
 <body>
 
 <div class="header">
-  <span style="font-size:24px">🖥️</span>
-  <div>
-    <h1>Dashboard de Usabilidad de Aulas Virtuales · ECCI</h1>
-    <p>Análisis de clics por profesor, programa y período académico</p>
+  <div class="header-left">
+    <span style="font-size:24px">🖥️</span>
+    <div>
+      <h1>Dashboard de Usabilidad de Aulas Virtuales · ECCI</h1>
+      <p>Análisis de actividad por profesor y programa académico</p>
+    </div>
   </div>
   <div class="header-right">
+    <div class="update-badge">
+      <span>🕐</span>
+      <span>Última actualización: <strong>25 de junio de 2026</strong></span>
+    </div>
     <div class="periodo-sel">
       <label>📅</label>
       <select id="periodo-sel" onchange="setPeriodo(this.value)">
@@ -190,61 +181,39 @@
         <option value="2026-1">2026-1</option>
       </select>
     </div>
-    <div class="header-badge" id="hbadge">ECCI · Todos los períodos</div>
+    <div class="header-badge" id="hbadge">Todos los períodos</div>
   </div>
 </div>
 
 <div class="container">
-  <!-- CAJA REFERENCIA -->
-  <div class="ref-box">
-    <div>
-      <div style="font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:2px;">Promedio de referencia (clics)</div>
-      <div style="display:flex;align-items:baseline;gap:6px;">
-        <span class="rv" id="ref-val">1.585</span>
-        <span style="font-size:11px;color:var(--text2);">clics/profesor</span>
-      </div>
-    </div>
-    <div class="ref-divider"></div>
-    <div class="rl">
-      <strong>% Clics</strong> = clics del profesor en programas válidos ÷ 1.585 × 100<br>
-      <span style="color:var(--red);font-size:10px;">Excluidos del cálculo: AULASVIRTU · COORDDIGV · NIVELATORIOS · COORCONTAD · COORADMEMP</span>
-    </div>
-    <div class="ref-divider"></div>
-    <div class="rl">
-      <strong>Promedio por programa</strong> = total clics del programa ÷ total cursos asignados<br>
-      <span style="color:var(--text2);font-size:10px;">(Opción A: incluye cursos con 0 clics)</span>
-    </div>
-  </div>
-
-  <!-- KPIs -->
   <div class="kpi-row">
     <div class="kpi purple"><span class="kpi-icon">👥</span>
       <div class="kpi-lbl">Profesores</div>
       <div class="kpi-val" id="k-profs">–</div>
-      <div class="kpi-sub" id="k-profs-sub">en el sistema</div></div>
+      <div class="kpi-sub" id="k-profs-sub">registrados</div></div>
     <div class="kpi teal"><span class="kpi-icon">📚</span>
-      <div class="kpi-lbl">Cursos</div>
+      <div class="kpi-lbl">Cursos Asignados</div>
       <div class="kpi-val" id="k-cursos">–</div>
-      <div class="kpi-sub" id="k-cursos-sub">asignados</div></div>
+      <div class="kpi-sub" id="k-cursos-sub">en el sistema</div></div>
     <div class="kpi yellow"><span class="kpi-icon">🖱️</span>
-      <div class="kpi-lbl">Total Clics</div>
+      <div class="kpi-lbl">Total de Clics</div>
       <div class="kpi-val" id="k-clicks">–</div>
       <div class="kpi-sub" id="k-clicks-sub">interacciones</div></div>
     <div class="kpi green"><span class="kpi-icon">📅</span>
-      <div class="kpi-lbl">Con Primer Ingreso</div>
+      <div class="kpi-lbl">Cursos con Acceso</div>
       <div class="kpi-val" id="k-ingreso">–</div>
-      <div class="kpi-sub" id="k-ingreso-sub">cursos con acceso</div></div>
+      <div class="kpi-sub" id="k-ingreso-sub">con al menos un ingreso</div></div>
     <div class="kpi cyan"><span class="kpi-icon">📊</span>
-      <div class="kpi-lbl">Prom. Clics/Curso</div>
+      <div class="kpi-lbl">Usabilidad General</div>
       <div class="kpi-val" id="k-avg">–</div>
-      <div class="kpi-sub">todos los cursos</div></div>
+      <div class="kpi-sub">% de actividad promedio</div></div>
   </div>
 
   <div class="main-grid">
-    <!-- IZQUIERDA -->
+    <!-- PANEL IZQUIERDO -->
     <div class="left-panel">
       <div class="panel-hdr">
-        <h3>👨‍🏫 Profesores <span style="font-size:10px;font-weight:400;color:var(--text2)">ordenados por % clics</span></h3>
+        <h3>👨‍🏫 Profesores</h3>
         <div class="search-box">
           <input type="text" id="search" placeholder="Buscar profesor...">
         </div>
@@ -262,9 +231,8 @@
       <div class="prof-list" id="prof-list"></div>
     </div>
 
-    <!-- DERECHA -->
+    <!-- PANEL DERECHO -->
     <div class="right-panel">
-      <!-- VISTA GLOBAL -->
       <div class="view active" id="view-global">
         <div class="tabs">
           <div class="tab active" onclick="showTab('programas',this)">📊 Por Programa</div>
@@ -274,27 +242,27 @@
         <div id="tab-programas">
           <div class="charts-grid">
             <div class="chart-card" style="grid-column:1/-1;">
-              <h4>🖱️ Promedio de Clics por Programa (Opción A · todos los cursos) — <span id="chart-periodo-note" style="font-weight:400;color:var(--text2)">Todos los períodos</span></h4>
+              <h4>📊 Usabilidad por Programa — <span id="chart-periodo-note" style="font-weight:400;color:var(--text2)">Todos los períodos</span></h4>
               <div class="chart-wrap" style="height:310px;"><canvas id="ch-programas"></canvas></div>
             </div>
             <div class="chart-card">
-              <h4>📦 Top 10 programas por Total de Clics</h4>
+              <h4>🖱️ Top 10 Programas por Actividad</h4>
               <div class="chart-wrap" style="height:220px;"><canvas id="ch-top-clicks"></canvas></div>
             </div>
             <div class="chart-card">
-              <h4>📊 Distribución de Cursos por Programa (Top 10)</h4>
+              <h4>📦 Distribución de Cursos por Programa</h4>
               <div class="chart-wrap" style="height:220px;"><canvas id="ch-dist"></canvas></div>
             </div>
           </div>
           <div class="tcard" style="margin-top:0;">
-            <h4>📋 Tabla por Programa <span id="tbl-periodo-note" style="font-size:10px;font-weight:400;color:var(--text2);"></span></h4>
+            <h4>📋 Detalle por Programa <span id="tbl-periodo-note" style="font-size:10px;font-weight:400;color:var(--text2);"></span></h4>
             <table>
               <thead><tr>
                 <th onclick="sortG('nombre')">Programa ↕</th>
                 <th onclick="sortG('total')">Cursos ↕</th>
-                <th onclick="sortG('con_clicks')">Con Clics ↕</th>
+                <th onclick="sortG('con_clicks')">Con Actividad ↕</th>
                 <th onclick="sortG('total_clicks')">Total Clics ↕</th>
-                <th onclick="sortG('prom_clicks')">Prom. Clics/Curso ↕</th>
+                <th onclick="sortG('pct_uso')">% Usabilidad ↕</th>
               </tr></thead>
               <tbody id="tbl-programas"></tbody>
             </table>
@@ -303,13 +271,13 @@
 
         <div id="tab-ranking" style="display:none;">
           <div class="tcard">
-            <h4>🏆 Ranking de Profesores por % de Clics <span id="rank-note" style="font-size:10px;font-weight:400;color:var(--text2);"></span></h4>
+            <h4>🏆 Ranking de Profesores <span id="rank-note" style="font-size:10px;font-weight:400;color:var(--text2);"></span></h4>
             <div class="filters">
-              <input type="text" id="rank-search" placeholder="Buscar..." oninput="renderRanking()">
+              <input type="text" id="rank-search" placeholder="Buscar profesor..." oninput="renderRanking()">
               <select id="rank-cat" onchange="renderRanking()"><option value="">Todos los programas</option></select>
               <select id="rank-sort" onchange="renderRanking()">
-                <option value="pct_desc">Mayor % Clics</option>
-                <option value="clicks_desc">Mayor total clics</option>
+                <option value="pct_desc">Mayor usabilidad</option>
+                <option value="clicks_desc">Mayor actividad</option>
                 <option value="cursos_desc">Más cursos</option>
               </select>
             </div>
@@ -317,7 +285,7 @@
               <table>
                 <thead><tr>
                   <th>#</th><th>Profesor</th><th>Programa(s)</th>
-                  <th>Cursos</th><th>Clics Válidos</th><th>% vs Ref. (1.585)</th><th>Total Clics</th>
+                  <th>Cursos</th><th>Clics</th><th>% Usabilidad</th>
                 </tr></thead>
                 <tbody id="tbl-ranking"></tbody>
               </table>
@@ -337,47 +305,44 @@
               <div class="pills" id="det-pills"></div>
             </div>
             <div style="text-align:center;">
-              <div style="font-size:9px;color:var(--yellow);text-transform:uppercase;margin-bottom:4px;letter-spacing:.5px;">% vs 1.585 clics</div>
+              <div style="font-size:9px;color:var(--yellow);text-transform:uppercase;margin-bottom:4px;letter-spacing:.5px;">Usabilidad</div>
               <canvas id="ring-c" width="80" height="80"></canvas>
-              <div class="ring-label" id="ring-val" style="margin-top:-56px;position:relative;z-index:1;color:var(--yellow);pointer-events:none;"></div>
-              <div style="margin-top:38px;font-size:9px;color:var(--text2);">del promedio ref.</div>
+              <div style="font-size:14px;font-weight:800;color:var(--yellow);margin-top:-48px;position:relative;z-index:1;pointer-events:none;" id="ring-val"></div>
+              <div style="margin-top:34px;font-size:9px;color:var(--text2);">del período</div>
             </div>
           </div>
         </div>
 
         <div class="charts-grid">
           <div class="chart-card" style="grid-column:1/-1;">
-            <h4>🖱️ Clics por Programa <span id="det-periodo-note" style="font-size:10px;font-weight:400;color:var(--text2);"></span>
-              <span style="margin-left:8px;font-size:10px;color:var(--red);font-weight:400;">⚠ barras rojas = excluidas del % clics</span></h4>
+            <h4>🖱️ Actividad por Programa <span id="det-periodo-note" style="font-size:10px;font-weight:400;color:var(--text2);"></span></h4>
             <div class="chart-wrap" style="height:200px;"><canvas id="ch-det-clicks"></canvas></div>
           </div>
         </div>
 
-        <!-- TABLA RESUMEN PROGRAMA -->
         <div class="tcard">
           <h4>📋 Resumen por Programa <span id="det-tbl-periodo" style="font-size:10px;font-weight:400;color:var(--text2);"></span></h4>
           <table>
             <thead><tr>
-              <th>Programa</th><th>Cursos</th><th>Con Clics</th>
-              <th>Total Clics</th><th>Prom. Programa</th><th>% vs 1.585</th>
+              <th>Programa</th><th>Cursos</th><th>Con Actividad</th>
+              <th>Total Clics</th><th>% Usabilidad</th>
               <th>Primer Ingreso</th><th>Último Ingreso</th>
             </tr></thead>
             <tbody id="det-tbl"></tbody>
           </table>
         </div>
 
-        <!-- TABLA CURSOS -->
         <div class="tcard">
-          <h4>📖 Cursos del Profesor <span id="det-cursos-periodo" style="font-size:10px;font-weight:400;color:var(--text2);"></span></h4>
+          <h4>📖 Cursos <span id="det-cursos-periodo" style="font-size:10px;font-weight:400;color:var(--text2);"></span></h4>
           <div class="filters">
             <input type="text" id="curso-q" placeholder="Buscar curso..." oninput="renderCursos()">
             <select id="curso-periodo" onchange="renderCursos()"><option value="">Todos los períodos</option></select>
             <select id="curso-cat" onchange="renderCursos()"><option value="">Todos los programas</option></select>
             <select id="curso-uso" onchange="renderCursos()">
               <option value="">Todos</option>
-              <option value="clicks">Con clics</option>
-              <option value="sin">Sin clics</option>
-              <option value="ingreso">Con primer ingreso</option>
+              <option value="clicks">Con actividad</option>
+              <option value="sin">Sin actividad</option>
+              <option value="ingreso">Con acceso registrado</option>
             </select>
           </div>
           <div id="cursos-info" style="font-size:10px;color:var(--text2);margin-bottom:5px;"></div>
@@ -401,103 +366,102 @@ const RAW = {"profesores": [{"nombre": "- PERMANENCIA VIRTUAL -", "correo": "per
 const DATA = RAW.profesores;
 const CAT_GLOBAL = RAW.cat_global;
 const CAT_NAMES = RAW.cat_names;
-const STATS = RAW.stats;
 const PROM_REF = 1585;
 const EXCLUIDAS = new Set(['AULASVIRTU','COORDDIGV','NIVELATORIOS 2025-1','NIVELATORIOS 2024-2','COORCONTAD','COORADMEMP']);
 
-let periodo = '', filtro = 'all', catFiltro = '', selectedProf = null;
-let gSortCol = 'prom_clicks', gSortDir = -1;
+let periodo='', filtro='all', catFiltro='', selectedProf=null;
+let gSortCol='pct_uso', gSortDir=-1;
 let chProg, chTopC, chDist, chDetClicks, ringChart;
 
 const fmt = n => (n||0).toLocaleString('es-CO');
-const fmtD = n => n != null ? (Math.round(n*10)/10).toLocaleString('es-CO') : '–';
-const pctBadge = p => p > 100 ? 'bp' : p >= 70 ? 'bg' : p >= 30 ? 'by' : 'br';
-const pctBarCls = p => p > 100 ? 'bar-over' : p >= 70 ? 'bar-high' : p >= 30 ? 'bar-mid' : 'bar-low';
-const catName = c => CAT_NAMES[c] || c;
-const periodoClass = p => (!p||p==='Sin asignación')?'bgr':p.startsWith('2023')?'p2023':p.startsWith('2024')?'p2024':p.startsWith('2025')?'p2025':p.startsWith('2026')?'p2026':'bgr';
+const fmtD = n => n!=null ? (Math.round(n*10)/10).toLocaleString('es-CO') : '–';
+const pctBadge = p => p>100?'bp':p>=70?'bg':p>=30?'by':'br';
+const pctBarCls = p => p>100?'bar-over':p>=70?'bar-high':p>=30?'bar-mid':'bar-low';
+const catName = c => CAT_NAMES[c]||c;
+const pClass = p => (!p||p==='Sin asignación')?'bgr':p.startsWith('2023')?'p2023':p.startsWith('2024')?'p2024':p.startsWith('2025')?'p2025':p.startsWith('2026')?'p2026':'bgr';
 
-// ── CALCULAR STATS DE PROFESOR EN PERÍODO ───────────────────────────────────
 function calcProf(prof, per) {
-  const cursos = per ? prof.cursos.filter(c => c.periodo === per) : prof.cursos;
+  const cursos = per ? prof.cursos.filter(c=>c.periodo===per) : prof.cursos;
   const total = cursos.length;
   const totalClicks = cursos.reduce((s,c)=>s+c.clicks,0);
   const clicksValidos = cursos.filter(c=>!c.excluida).reduce((s,c)=>s+c.clicks,0);
   const conClicks = cursos.filter(c=>c.clicks>0).length;
   const conIngreso = cursos.filter(c=>c.primer_ingreso).length;
   const pct = parseFloat((clicksValidos/PROM_REF*100).toFixed(1));
-  return { total, totalClicks, clicksValidos, conClicks, conIngreso, pct, cursos };
+  return {total, totalClicks, clicksValidos, conClicks, conIngreso, pct, cursos};
 }
 
-// ── CALCULAR STATS DE PROGRAMAS EN PERÍODO ─────────────────────────────────
 function calcCats(per) {
-  const map = {};
-  DATA.forEach(prof => {
-    (per ? prof.cursos.filter(c=>c.periodo===per) : prof.cursos).forEach(c => {
-      const cat = c.categoria;
-      if (!cat || cat==='#N/A') return;
-      if (!map[cat]) map[cat]={codigo:cat,nombre:catName(cat),total:0,con_clicks:0,total_clicks:0,excluida:EXCLUIDAS.has(cat)};
+  const map={};
+  DATA.forEach(prof=>{
+    (per?prof.cursos.filter(c=>c.periodo===per):prof.cursos).forEach(c=>{
+      const cat=c.categoria;
+      if(!cat||cat==='#N/A') return;
+      if(!map[cat]) map[cat]={codigo:cat,nombre:catName(cat),total:0,con_clicks:0,total_clicks:0,excluida:EXCLUIDAS.has(cat)};
       map[cat].total++;
-      if (c.clicks>0) map[cat].con_clicks++;
-      map[cat].total_clicks += c.clicks;
+      if(c.clicks>0) map[cat].con_clicks++;
+      map[cat].total_clicks+=c.clicks;
     });
   });
-  return Object.values(map).map(v=>({...v, prom_clicks: v.total>0?parseFloat((v.total_clicks/v.total).toFixed(1)):0}));
+  return Object.values(map).map(v=>({...v,
+    pct_uso: v.total>0 ? parseFloat((v.total_clicks/v.total/PROM_REF*100).toFixed(1)) : 0
+  }));
 }
 
-// ── CALCULAR KPIs GLOBALES ─────────────────────────────────────────────────
 function calcKpis(per) {
-  let total=0,clicks=0,ingreso=0,profs=new Set();
+  let total=0,clicks=0,ingreso=0,profs=new Set(),validos=0;
   DATA.forEach(p=>{
-    const cur = per ? p.cursos.filter(c=>c.periodo===per) : p.cursos;
-    if (!cur.length) return;
+    const cur=per?p.cursos.filter(c=>c.periodo===per):p.cursos;
+    if(!cur.length) return;
     profs.add(p.nombre);
-    cur.forEach(c=>{ total++; clicks+=c.clicks; if(c.primer_ingreso) ingreso++; });
+    cur.forEach(c=>{
+      total++; clicks+=c.clicks;
+      if(c.primer_ingreso) ingreso++;
+      if(!c.excluida) validos+=c.clicks;
+    });
   });
-  return {profs:profs.size, total, clicks, ingreso, avg: total>0?parseFloat((clicks/total).toFixed(1)):0};
+  const pctGlobal=parseFloat((validos/PROM_REF/Math.max(profs.size,1)*100).toFixed(1));
+  return {profs:profs.size, total, clicks, ingreso, pctGlobal};
 }
 
 function setPeriodo(per) {
-  periodo = per;
-  document.getElementById('hbadge').textContent = per ? `ECCI · ${per}` : 'ECCI · Todos los períodos';
+  periodo=per;
+  document.getElementById('hbadge').textContent=per?`Período ${per}`:'Todos los períodos';
   updateAll();
 }
 
 function updateAll() {
-  const k = calcKpis(periodo);
-  document.getElementById('k-profs').textContent = fmt(k.profs);
-  document.getElementById('k-profs-sub').textContent = periodo ? `con cursos en ${periodo}` : 'en el sistema';
-  document.getElementById('k-cursos').textContent = fmt(k.total);
-  document.getElementById('k-cursos-sub').textContent = periodo ? `en ${periodo}` : 'asignados';
-  document.getElementById('k-clicks').textContent = fmt(k.clicks);
-  document.getElementById('k-clicks-sub').textContent = periodo ? `en ${periodo}` : 'interacciones';
-  document.getElementById('k-ingreso').textContent = fmt(k.ingreso);
-  document.getElementById('k-ingreso-sub').textContent = periodo ? `en ${periodo}` : 'cursos con acceso';
-  document.getElementById('k-avg').textContent = fmtD(k.avg);
-  renderList();
-  renderGlobalCharts();
-  renderGlobalTable();
-  renderRanking();
-  if (selectedProf) showDetalle(selectedProf);
+  const k=calcKpis(periodo);
+  document.getElementById('k-profs').textContent=fmt(k.profs);
+  document.getElementById('k-profs-sub').textContent=periodo?`en ${periodo}`:'registrados';
+  document.getElementById('k-cursos').textContent=fmt(k.total);
+  document.getElementById('k-cursos-sub').textContent=periodo?`en ${periodo}`:'en el sistema';
+  document.getElementById('k-clicks').textContent=fmt(k.clicks);
+  document.getElementById('k-clicks-sub').textContent=periodo?`en ${periodo}`:'interacciones';
+  document.getElementById('k-ingreso').textContent=fmt(k.ingreso);
+  document.getElementById('k-ingreso-sub').textContent=periodo?`en ${periodo}`:'con al menos un ingreso';
+  document.getElementById('k-avg').textContent=k.pctGlobal+'%';
+  renderList(); renderGlobalCharts(); renderGlobalTable(); renderRanking();
+  if(selectedProf) showDetalle(selectedProf);
 }
 
 function init() {
-  const allCats = [...new Set(CAT_GLOBAL.map(c=>c.codigo))].sort();
+  const allCats=[...new Set(CAT_GLOBAL.map(c=>c.codigo))].sort();
   ['cat-filter','rank-cat'].forEach(id=>{
     const sel=document.getElementById(id);
-    allCats.forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent=catName(c)+(EXCLUIDAS.has(c)?' ⚠':''); sel.appendChild(o); });
+    allCats.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=catName(c);sel.appendChild(o);});
   });
   updateAll();
-  document.getElementById('search').addEventListener('input', renderList);
-  document.getElementById('cat-filter').addEventListener('change', ()=>{ catFiltro=document.getElementById('cat-filter').value; renderList(); });
+  document.getElementById('search').addEventListener('input',renderList);
+  document.getElementById('cat-filter').addEventListener('change',()=>{catFiltro=document.getElementById('cat-filter').value;renderList();});
 }
 
-// ── LISTA ───────────────────────────────────────────────────────────────────
 function getList() {
   const q=(document.getElementById('search').value||'').toLowerCase();
   return DATA.map(p=>({...p,_s:calcProf(p,periodo)})).filter(p=>{
     if(p._s.total===0) return false;
     if(q&&!p.nombre.toLowerCase().includes(q)) return false;
-    if(catFiltro){ const ok=(periodo?p.cursos.filter(c=>c.periodo===periodo):p.cursos).some(c=>c.categoria===catFiltro); if(!ok) return false; }
+    if(catFiltro){const ok=(periodo?p.cursos.filter(c=>c.periodo===periodo):p.cursos).some(c=>c.categoria===catFiltro);if(!ok) return false;}
     if(filtro==='high'&&p._s.pct<70) return false;
     if(filtro==='mid'&&(p._s.pct<30||p._s.pct>=70)) return false;
     if(filtro==='low'&&p._s.pct>=30) return false;
@@ -511,7 +475,7 @@ function renderList() {
   const c=document.getElementById('prof-list');
   if(!list.length){c.innerHTML='<div style="text-align:center;padding:24px;color:var(--text2);font-size:12px;">Sin resultados</div>';return;}
   c.innerHTML=list.map(p=>{
-    const s=p._s, sel=selectedProf&&selectedProf.nombre===p.nombre;
+    const s=p._s,sel=selectedProf&&selectedProf.nombre===p.nombre;
     const cls=s.pct>100?'pct-over':s.pct>=70?'pct-high':s.pct>=30?'pct-mid':'pct-low';
     const bcls=s.pct>100?'bar-over':s.pct>=70?'bar-high':s.pct>=30?'bar-mid':'bar-low';
     return `<div class="prof-item${sel?' selected':''}" onclick="selectProf('${p.nombre.replace(/'/g,"\'")}')">
@@ -526,17 +490,13 @@ function renderList() {
 }
 
 function setFilter(f,el){
-  filtro=f;
-  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  renderList();
+  filtro=f;document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderList();
 }
 
 function selectProf(nombre){
   selectedProf=DATA.find(p=>p.nombre===nombre);
   if(!selectedProf) return;
-  renderList();
-  showDetalle(selectedProf);
+  renderList(); showDetalle(selectedProf);
 }
 
 function showGlobal(){
@@ -546,13 +506,11 @@ function showGlobal(){
   renderList();
 }
 
-// ── DETALLE ─────────────────────────────────────────────────────────────────
 function showDetalle(prof) {
   document.getElementById('view-global').classList.remove('active');
   document.getElementById('view-detalle').classList.add('active');
   document.getElementById('det-name').textContent=prof.nombre;
   document.getElementById('det-email').textContent=prof.correo||'';
-
   const s=calcProf(prof,periodo);
   const pNote=periodo?`· ${periodo}`:'· Todos los períodos';
   document.getElementById('det-periodo-note').textContent=pNote;
@@ -560,29 +518,25 @@ function showDetalle(prof) {
   document.getElementById('det-cursos-periodo').textContent=pNote;
 
   document.getElementById('det-pills').innerHTML=`
-    <div class="pill hl-y"><div class="pv" style="color:var(--yellow)">${s.pct}%${s.pct>100?' 🔥':''}</div><div class="pl">% vs 1.585</div></div>
-    <div class="pill hl-p"><div class="pv" style="color:var(--purple)">${fmt(s.clicksValidos)}</div><div class="pl">Clics Válidos</div></div>
-    <div class="pill"><div class="pv" style="color:var(--accent)">${s.total}</div><div class="pl">Total Cursos</div></div>
-    <div class="pill"><div class="pv" style="color:var(--blue)">${s.conClicks}</div><div class="pl">Cursos con Clics</div></div>
-    <div class="pill"><div class="pv" style="color:var(--green)">${s.conIngreso}</div><div class="pl">Con Primer Ingreso</div></div>
+    <div class="pill hl-y"><div class="pv" style="color:var(--yellow)">${s.pct}%${s.pct>100?' 🔥':''}</div><div class="pl">Usabilidad</div></div>
+    <div class="pill hl-p"><div class="pv" style="color:var(--purple)">${fmt(s.clicksValidos)}</div><div class="pl">Clics Registrados</div></div>
+    <div class="pill"><div class="pv" style="color:var(--accent)">${s.total}</div><div class="pl">Cursos</div></div>
+    <div class="pill"><div class="pv" style="color:var(--blue)">${s.conClicks}</div><div class="pl">Con Actividad</div></div>
+    <div class="pill"><div class="pv" style="color:var(--green)">${s.conIngreso}</div><div class="pl">Con Acceso</div></div>
     <div class="pill"><div class="pv" style="color:var(--text2)">${fmt(s.totalClicks)}</div><div class="pl">Total Clics</div></div>
   `;
 
-  // Ring
   document.getElementById('ring-val').textContent=s.pct+'%';
   if(ringChart) ringChart.destroy();
-  const rc=document.getElementById('ring-c').getContext('2d');
   const rc_color=s.pct>100?'#a78bfa':s.pct>=70?'#ffd93d':s.pct>=30?'#fb923c':'#ff6b6b';
-  ringChart=new Chart(rc,{type:'doughnut',
+  ringChart=new Chart(document.getElementById('ring-c').getContext('2d'),{type:'doughnut',
     data:{datasets:[{data:[Math.min(s.pct,100),Math.max(0,100-s.pct)],backgroundColor:[rc_color,'#22263a'],borderWidth:0}]},
     options:{cutout:'72%',plugins:{legend:{display:false},tooltip:{enabled:false}},animation:{duration:400}}});
 
-  // Calcular cats del profesor en período
   const catMap={};
   s.cursos.filter(c=>c.categoria!=='#N/A').forEach(c=>{
     if(!catMap[c.categoria]) catMap[c.categoria]={nombre:c.cat_nombre||catName(c.categoria),codigo:c.categoria,
-      total:0,con_clicks:0,clicks:0,excluida:EXCLUIDAS.has(c.categoria),
-      primer_ingreso:null,ultimo_ingreso:null};
+      total:0,con_clicks:0,clicks:0,excluida:EXCLUIDAS.has(c.categoria),primer_ingreso:null,ultimo_ingreso:null};
     catMap[c.categoria].total++;
     if(c.clicks>0) catMap[c.categoria].con_clicks++;
     catMap[c.categoria].clicks+=c.clicks;
@@ -596,47 +550,36 @@ function showDetalle(prof) {
   const ds={grid:{color:'#2e3350'},ticks:{color:'#9aa0c0',font:{size:10}}};
   const tt={backgroundColor:'#1e2235',borderColor:'#2e3350',borderWidth:1,titleColor:'#e8eaf6',bodyColor:'#9aa0c0'};
 
-  // Gráfico clics por programa
   if(chDetClicks) chDetClicks.destroy();
   chDetClicks=new Chart(document.getElementById('ch-det-clicks').getContext('2d'),{type:'bar',
     data:{labels:cats.map(c=>c.nombre),
-      datasets:[{label:'Clics',data:cats.map(c=>c.clicks),
-        backgroundColor:cats.map(c=>c.excluida?'rgba(255,107,107,.5)':'rgba(108,99,255,.8)'),borderRadius:3}]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{...tt}},
+      datasets:[{data:cats.map(c=>c.clicks),
+        backgroundColor:cats.map(c=>c.excluida?'rgba(255,107,107,.4)':'rgba(108,99,255,.8)'),borderRadius:3}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...tt}},
       scales:{y:{...ds},x:{...ds}}}});
 
-  // Tabla por programa
-  // Buscar promedio global del programa para comparar
-  const catGlobalMap={};
-  CAT_GLOBAL.forEach(c=>catGlobalMap[c.codigo]=c);
-
+  const catGMap={};CAT_GLOBAL.forEach(c=>catGMap[c.codigo]=c);
   document.getElementById('det-tbl').innerHTML=cats.map(c=>{
-    const globalCat=catGlobalMap[c.codigo]||{};
-    const promGlobal=globalCat.prom_clicks||0;
-    const pctProf=!c.excluida&&PROM_REF>0?parseFloat((c.clicks/PROM_REF*100).toFixed(1)):null;
+    const pct=!c.excluida?parseFloat((c.clicks/PROM_REF*100).toFixed(1)):null;
     return `<tr>
-      <td><strong>${c.nombre}</strong>${c.excluida?'<br><span class="excl-tag">⚠ excluida</span>':''}</td>
+      <td><strong>${c.nombre}</strong></td>
       <td>${c.total}</td>
       <td style="color:var(--yellow)">${c.con_clicks}</td>
       <td style="font-weight:600">${fmt(c.clicks)}</td>
-      <td style="color:var(--text2)">${fmtD(promGlobal)} <span style="font-size:9px">/curso</span></td>
       <td>${c.excluida?'<span style="color:var(--text2)">—</span>':
-        `<div class="pbar-cell"><span class="badge ${pctBadge(pctProf)}">${pctProf}%</span>
-        <div class="pbar-w"><div class="pbar ${pctBarCls(pctProf)}" style="width:${Math.min(pctProf,100)}%"></div></div></div>`}</td>
+        `<div class="pbar-cell"><span class="badge ${pctBadge(pct)}">${pct}%</span>
+        <div class="pbar-w"><div class="pbar ${pctBarCls(pct)}" style="width:${Math.min(pct,100)}%"></div></div></div>`}</td>
       <td style="font-size:10px;color:var(--green)">${c.primer_ingreso?c.primer_ingreso.substring(0,10):'–'}</td>
       <td style="font-size:10px;color:var(--blue)">${c.ultimo_ingreso?c.ultimo_ingreso.substring(0,10):'–'}</td>
     </tr>`;
   }).join('');
 
-  // Filtros cursos
   const periodosP=[...new Set(prof.cursos.map(c=>c.periodo))].sort();
   const catsP=[...new Set(prof.cursos.map(c=>c.categoria).filter(c=>c!=='#N/A'))].sort();
   document.getElementById('curso-periodo').innerHTML='<option value="">Todos los períodos</option>'+
     periodosP.map(p=>`<option value="${p}"${p===periodo?'selected':''}>${p}</option>`).join('');
   document.getElementById('curso-cat').innerHTML='<option value="">Todos los programas</option>'+
-    catsP.map(c=>`<option value="${c}">${catName(c)}${EXCLUIDAS.has(c)?' ⚠':''}</option>`).join('');
-
+    catsP.map(c=>`<option value="${c}">${catName(c)}</option>`).join('');
   renderCursos();
 }
 
@@ -655,14 +598,14 @@ function renderCursos(){
     if(uso==='ingreso'&&!c.primer_ingreso) return false;
     return true;
   });
-  document.getElementById('cursos-info').textContent=`${cur.length} cursos · ${cur.filter(c=>c.clicks>0).length} con clics · ${cur.filter(c=>c.primer_ingreso).length} con primer ingreso`;
+  document.getElementById('cursos-info').textContent=`${cur.length} cursos · ${cur.filter(c=>c.clicks>0).length} con actividad · ${cur.filter(c=>c.primer_ingreso).length} con acceso registrado`;
   if(!cur.length){
     document.getElementById('tbl-cursos').innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--text2);padding:16px">Sin resultados</td></tr>';
     return;
   }
   document.getElementById('tbl-cursos').innerHTML=cur.map(c=>`<tr>
-    <td><span class="badge ${periodoClass(c.periodo)}">${c.periodo}</span></td>
-    <td style="font-weight:500;max-width:230px">${c.nombre}${c.excluida?'<span class="excl-tag"> ⚠</span>':''}</td>
+    <td><span class="badge ${pClass(c.periodo)}">${c.periodo}</span></td>
+    <td style="font-weight:500;max-width:230px">${c.nombre}</td>
     <td style="font-size:10px;color:var(--text2)">${c.cat_nombre||catName(c.categoria)}</td>
     <td>${c.clicks>0?`<span class="badge by">${fmt(c.clicks)}</span>`:'<span style="color:var(--text2)">0</span>'}</td>
     <td style="font-size:10px;color:var(--green)">${c.primer_ingreso?c.primer_ingreso.substring(0,10):'–'}</td>
@@ -670,31 +613,28 @@ function renderCursos(){
   </tr>`).join('');
 }
 
-// ── GRÁFICOS GLOBALES ───────────────────────────────────────────────────────
 function renderGlobalCharts(){
-  const note=periodo||'Todos los períodos';
-  document.getElementById('chart-periodo-note').textContent=note;
-  const cats=calcCats(periodo).sort((a,b)=>b.prom_clicks-a.prom_clicks);
+  document.getElementById('chart-periodo-note').textContent=periodo||'Todos los períodos';
+  const cats=calcCats(periodo).sort((a,b)=>b.pct_uso-a.pct_uso);
   const ds={grid:{color:'#2e3350'},ticks:{color:'#9aa0c0',font:{size:10}}};
   const tt={backgroundColor:'#1e2235',borderColor:'#2e3350',borderWidth:1,titleColor:'#e8eaf6',bodyColor:'#9aa0c0'};
 
   if(chProg) chProg.destroy();
   chProg=new Chart(document.getElementById('ch-programas').getContext('2d'),{type:'bar',
     data:{labels:cats.map(c=>c.nombre),
-      datasets:[{label:'Prom. Clics/Curso',data:cats.map(c=>c.prom_clicks),
-        backgroundColor:cats.map(c=>c.excluida?'rgba(255,107,107,.5)':'rgba(108,99,255,.8)'),borderRadius:3}]},
+      datasets:[{label:'% Usabilidad',data:cats.map(c=>c.pct_uso),
+        backgroundColor:cats.map(c=>c.pct_uso>=70?'rgba(0,212,170,.8)':c.pct_uso>=30?'rgba(255,217,61,.8)':'rgba(255,107,107,.7)'),
+        borderRadius:3}]},
     options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
-      plugins:{legend:{display:false},tooltip:{...tt}},
-      scales:{x:{...ds},y:{...ds}}}});
+      plugins:{legend:{display:false},tooltip:{...tt,callbacks:{label:ctx=>`${ctx.raw}%`}}},
+      scales:{x:{...ds,max:Math.min(Math.max(...cats.map(c=>c.pct_uso))+10,150)},y:{...ds}}}});
 
   const topC=[...cats].sort((a,b)=>b.total_clicks-a.total_clicks).slice(0,10);
   if(chTopC) chTopC.destroy();
   chTopC=new Chart(document.getElementById('ch-top-clicks').getContext('2d'),{type:'bar',
-    data:{labels:topC.map(c=>c.nombre),datasets:[{data:topC.map(c=>c.total_clicks),
-      backgroundColor:topC.map(c=>c.excluida?'rgba(255,107,107,.5)':'#6c63ff'),borderRadius:3}]},
+    data:{labels:topC.map(c=>c.nombre),datasets:[{data:topC.map(c=>c.total_clicks),backgroundColor:'#6c63ff',borderRadius:3}]},
     options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
-      plugins:{legend:{display:false},tooltip:{...tt}},
-      scales:{x:{...ds},y:{...ds}}}});
+      plugins:{legend:{display:false},tooltip:{...tt}},scales:{x:{...ds},y:{...ds}}}});
 
   const top10=[...cats].sort((a,b)=>b.total-a.total).slice(0,10);
   if(chDist) chDist.destroy();
@@ -713,14 +653,13 @@ function renderGlobalTable(){
     return gSortDir*(typeof va==='string'?va.localeCompare(vb):vb-va);
   });
   document.getElementById('tbl-programas').innerHTML=sorted.map(c=>`<tr>
-    <td><strong>${c.nombre}</strong>${c.excluida?'<span class="excl-tag"> ⚠ excluida promedio</span>':''}
-      <br><span style="font-size:9px;color:var(--text2)">${c.codigo}</span></td>
+    <td><strong>${c.nombre}</strong><br><span style="font-size:9px;color:var(--text2)">${c.codigo}</span></td>
     <td>${fmt(c.total)}</td>
     <td style="color:var(--yellow)">${fmt(c.con_clicks)}</td>
     <td style="font-weight:600">${fmt(c.total_clicks)}</td>
     <td><div class="pbar-cell">
-      <span style="color:var(--purple);font-weight:700">${fmtD(c.prom_clicks)}</span>
-      <div class="pbar-w" style="width:70px"><div class="pbar" style="background:var(--purple);width:${Math.min(c.prom_clicks/20,100)}%"></div></div>
+      <span class="badge ${pctBadge(c.pct_uso)}">${c.pct_uso}%</span>
+      <div class="pbar-w"><div class="pbar ${pctBarCls(c.pct_uso)}" style="width:${Math.min(c.pct_uso,100)}%"></div></div>
     </div></td>
   </tr>`).join('');
 }
@@ -765,7 +704,6 @@ function renderRanking(){
       <td style="color:var(--purple)">${fmt(s.clicksValidos)}</td>
       <td><div class="pbar-cell"><span class="badge ${pctBadge(s.pct)}">${s.pct}%${s.pct>100?' 🔥':''}</span>
         <div class="pbar-w"><div class="pbar ${pctBarCls(s.pct)}" style="width:${Math.min(s.pct,100)}%"></div></div></div></td>
-      <td>${fmt(s.totalClicks)}</td>
     </tr>`;
   }).join('');
 }
