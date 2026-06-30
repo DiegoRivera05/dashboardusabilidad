@@ -387,7 +387,7 @@ function calcProf(prof, per) {
   const clicksValidos = cursos.filter(c=>!c.excluida).reduce((s,c)=>s+c.clicks,0);
   const conClicks = cursos.filter(c=>c.clicks>0).length;
   const conIngreso = cursos.filter(c=>c.primer_ingreso).length;
-  const pct = parseFloat((clicksValidos/PROM_REF*100).toFixed(1));
+  const pct = Math.min(100, parseFloat((clicksValidos/PROM_REF*100).toFixed(1)));
   return {total, totalClicks, clicksValidos, conClicks, conIngreso, pct, cursos};
 }
 
@@ -404,7 +404,7 @@ function calcCats(per) {
     });
   });
   return Object.values(map).map(v=>({...v,
-    pct_uso: v.total>0 ? parseFloat((v.total_clicks/v.total/PROM_REF*100).toFixed(1)) : 0
+    pct_uso: v.total>0 ? Math.min(100, parseFloat((v.total_clicks/v.total/PROM_REF*100).toFixed(1))) : 0
   }));
 }
 
@@ -420,7 +420,7 @@ function calcKpis(per) {
       if(!c.excluida) validos+=c.clicks;
     });
   });
-  const pctGlobal=parseFloat((validos/PROM_REF/Math.max(profs.size,1)*100).toFixed(1));
+  const pctGlobal=Math.min(100, parseFloat((validos/PROM_REF/Math.max(profs.size,1)*100).toFixed(1)));
   return {profs:profs.size, total, clicks, ingreso, pctGlobal};
 }
 
@@ -518,7 +518,7 @@ function showDetalle(prof) {
   document.getElementById('det-cursos-periodo').textContent=pNote;
 
   document.getElementById('det-pills').innerHTML=`
-    <div class="pill hl-y"><div class="pv" style="color:var(--yellow)">${s.pct}%${s.pct>100?' 🔥':''}</div><div class="pl">Usabilidad</div></div>
+    <div class="pill hl-y"><div class="pv" style="color:var(--yellow)">${s.pct}%</div><div class="pl">Usabilidad</div></div>
     <div class="pill hl-p"><div class="pv" style="color:var(--purple)">${fmt(s.clicksValidos)}</div><div class="pl">Clics Registrados</div></div>
     <div class="pill"><div class="pv" style="color:var(--accent)">${s.total}</div><div class="pl">Cursos</div></div>
     <div class="pill"><div class="pv" style="color:var(--blue)">${s.conClicks}</div><div class="pl">Con Actividad</div></div>
@@ -560,7 +560,7 @@ function showDetalle(prof) {
 
   const catGMap={};CAT_GLOBAL.forEach(c=>catGMap[c.codigo]=c);
   document.getElementById('det-tbl').innerHTML=cats.map(c=>{
-    const pct=!c.excluida?parseFloat((c.clicks/PROM_REF*100).toFixed(1)):null;
+    const pct=!c.excluida?Math.min(100, parseFloat((c.clicks/PROM_REF*100).toFixed(1))):null;
     return `<tr>
       <td><strong>${c.nombre}</strong></td>
       <td>${c.total}</td>
@@ -702,7 +702,7 @@ function renderRanking(){
       <td style="font-size:10px;color:var(--text2);max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${progs}</td>
       <td>${s.total}</td>
       <td style="color:var(--purple)">${fmt(s.clicksValidos)}</td>
-      <td><div class="pbar-cell"><span class="badge ${pctBadge(s.pct)}">${s.pct}%${s.pct>100?' 🔥':''}</span>
+      <td><div class="pbar-cell"><span class="badge ${pctBadge(s.pct)}">${s.pct}%</span>
         <div class="pbar-w"><div class="pbar ${pctBarCls(s.pct)}" style="width:${Math.min(s.pct,100)}%"></div></div></div></td>
     </tr>`;
   }).join('');
